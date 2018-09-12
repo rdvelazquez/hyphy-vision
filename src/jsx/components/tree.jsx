@@ -801,30 +801,33 @@ var Tree = React.createClass({
               </button>
             </div>
 
-            <div className="btn-group-toggle" data-toggle="buttons">
-              <button className="btn btn-secondary active">
-                <input
-                  type="radio"
-                  name="options"
-                  className="phylotree-layout-mode"
-                  data-mode="linear"
-                  autoComplete="off"
-                  checked=""
-                  title="Layout left-to-right"
-                />Linear
-              </button>
-              <button className="btn btn-secondary">
-                <input
-                  type="radio"
-                  name="options"
-                  className="phylotree-layout-mode"
-                  data-mode="radial"
-                  autoComplete="off"
-                  title="Layout radially"
-                />{" "}
-                Radial
-              </button>
-            </div>
+            {this.props.settings.dontAllowRadial ? null : (
+              <div className="btn-group-toggle" data-toggle="buttons">
+                <button className="btn btn-secondary active">
+                  <input
+                    type="radio"
+                    name="options"
+                    className="phylotree-layout-mode"
+                    data-mode="linear"
+                    autoComplete="off"
+                    checked=""
+                    title="Layout left-to-right"
+                  />Linear
+                </button>
+
+                <button className="btn btn-secondary">
+                  <input
+                    type="radio"
+                    name="options"
+                    className="phylotree-layout-mode"
+                    data-mode="radial"
+                    autoComplete="off"
+                    title="Layout radially"
+                  />{" "}
+                  Radial
+                </button>
+              </div>
+            )}
 
             <div className="btn-group-toggle" data-toggle="buttons">
               <button className="btn btn-secondary active">

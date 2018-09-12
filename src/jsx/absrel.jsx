@@ -293,7 +293,8 @@ class BSRELContents extends React.Component {
       },
       "suppress-tree-render": false,
       "chart-append-html": true,
-      edgeColorizer: edgeColorizer
+      edgeColorizer: edgeColorizer,
+      dontAllowRadial: true
     };
 
     this.state = {
