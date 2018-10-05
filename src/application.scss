@@ -9,6 +9,8 @@
 
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
 
+@import "~alignment.js/lib/alignment.css";
+
 /* End Imports */
 /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -281,10 +283,6 @@ toolbar-dropdown::before {
   padding: 6px 12px;
   border: none;
   text-align: center;
-}
-
-/* Sizing classes must be here rather than on individual form elements. */
-.input-group {
 }
 
 /* TABLES */
@@ -1501,6 +1499,7 @@ input[type="range"]:focus::-ms-fill-upper {
   background: #ccc;
 }
 
+
 .modal .modal-dialog {
   width: 850px;
   max-width: 850px;
@@ -1524,7 +1523,8 @@ input[type="range"]:focus::-ms-fill-upper {
 
 #tree_tooltip {
   color: #fff;
-  position: absolute;
+  display: block;
+  position: fixed;
   padding: 20px;
   max-width: 200px;
 
@@ -1678,10 +1678,6 @@ input[type="range"]:focus::-ms-fill-upper {
   } 
 }
 */
-
-input[type="file"] {
-  display: none;
-}
 
 .custom-file-upload {
   border: 1px solid #ccc;

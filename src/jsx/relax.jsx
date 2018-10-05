@@ -1,12 +1,12 @@
+import React from "react";
+import ReactDOM from "react-dom";
 import { Tree } from "./components/tree.jsx";
 import { OmegaPlotGrid } from "./components/omega_plots.jsx";
 import { Header } from "./components/header.jsx";
 import { DatamonkeyTable } from "./components/tables.jsx";
 import { MainResult } from "./components/mainresult.jsx";
 import { ResultsPage } from "./components/results_page.jsx";
-
-var React = require("react"),
-  _ = require("underscore");
+var _ = require("underscore");
 
 class RELAXModelTable extends React.Component {
   constructor(props) {
@@ -93,7 +93,6 @@ class RELAXModelTable extends React.Component {
       <div>
         <table
           className="dm-table table table-hover table-smm list-group-item-text"
-          style={{ marginTop: "0.5em" }}
         >
           <thead id="summary-model-header1">
             <tr>
@@ -496,30 +495,32 @@ function RELAX(props) {
   return (
     <ResultsPage
       data={props.data}
-      hyphy_vision={props.hyphy_vision}
       scrollSpyInfo={[
         { label: "summary", href: "summary-tab" },
         { label: "fits", href: "fits-tab" },
         { label: "tree", href: "tree-tab" }
       ]}
       methodName="RELAX(ed selection test)"
+      fasta={props.fasta}
+      originalFile={props.originalFile}
+      analysisLog={props.analysisLog}
     >
       {RELAXContents}
     </ResultsPage>
   );
 }
 
-function render_relax(data, element) {
-  ReactDOM.render(<RELAX data={data} />, document.getElementById(element));
-}
-
-function render_hv_relax(data, element) {
+function render_relax(data, element, fasta, originalFile, analysisLog) {
   ReactDOM.render(
-    <RELAX data={data} hyphy_vision />,
+    <RELAX
+      data={data}
+      fasta={fasta}
+      originalFile={originalFile}
+      analysisLog={analysisLog}
+    />,
     document.getElementById(element)
   );
 }
 
 module.exports = render_relax;
-module.exports.hv = render_hv_relax;
 module.exports.RELAX = RELAX;

@@ -361,7 +361,7 @@ class FUBARViz extends React.Component {
           <button
             id="export-chart-svg"
             type="button"
-            className="btn.btn-secondary btn-sm pull-right btn-export"
+            className="btn.btn-secondary btn-sm float-right btn-export"
             onClick={() =>
               d3_save_svg.save(d3.select("#fubar-viz").node(), {
                 filename: "datamonkey-chart"
@@ -373,7 +373,7 @@ class FUBARViz extends React.Component {
           <button
             id="export-chart-png"
             type="button"
-            className="btn.btn-secondary btn-sm pull-right btn-export"
+            className="btn.btn-secondary btn-sm float-right btn-export"
             onClick={() =>
               saveSvgAsPng(
                 document.getElementById("fubar-viz"),
@@ -560,7 +560,6 @@ class FUBARContents extends React.Component {
           json={self.state.data}
           updatePosteriorProbability={self.updatePosteriorProbability}
           posteriorProbability={self.state.posteriorProbability}
-          hyphy_vision={self.props.hyphy_vision}
         />
 
         <FUBARViz
@@ -610,7 +609,6 @@ function FUBAR(props) {
   return (
     <ResultsPage
       data={props.data}
-      hyphy_vision={props.hyphy_vision}
       scrollSpyInfo={[
         { label: "summary", href: "summary-tab" },
         { label: "plot", href: "plot-tab" },
@@ -619,23 +617,26 @@ function FUBAR(props) {
         { label: "fits", href: "fit-tab" }
       ]}
       methodName="Fast Unconstrained Bayesian AppRoximation"
+      fasta={props.fasta}
+      originalFile={props.originalFile}
+      analysisLog={props.analysisLog}
     >
       {FUBARContents}
     </ResultsPage>
   );
 }
 
-function render_fubar(data, element) {
-  ReactDOM.render(<FUBAR data={data} />, document.getElementById(element));
-}
-
-function render_hv_fubar(data, element) {
+function render_fubar(data, element, fasta, originalFile, analysisLog) {
   ReactDOM.render(
-    <FUBAR data={data} hyphy_vision />,
+    <FUBAR
+      data={data}
+      fasta={fasta}
+      originalFile={originalFile}
+      analysisLog={analysisLog}
+    />,
     document.getElementById(element)
   );
 }
 
 module.exports = render_fubar;
-module.exports.hv = render_hv_fubar;
 module.exports.FUBAR = FUBAR;

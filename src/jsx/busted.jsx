@@ -376,7 +376,7 @@ var BUSTEDSiteChartAndTable = React.createClass({
             <button
               id="export-chart-svg"
               type="button"
-              className="btn.btn-secondary btn-sm pull-right btn-export"
+              className="btn.btn-secondary btn-sm float-right btn-export"
               onClick={() => {
                 d3_save_svg.save(d3.select("#chart").node(), {
                   filename: "busted"
@@ -388,7 +388,7 @@ var BUSTEDSiteChartAndTable = React.createClass({
             <button
               id="export-chart-png"
               type="button"
-              className="btn.btn-secondary btn-sm pull-right btn-export"
+              className="btn.btn-secondary btn-sm float-right btn-export"
               onClick={() => {
                 saveSvgAsPng(
                   document.getElementById("chart"),
@@ -622,10 +622,7 @@ class BUSTEDModelTable extends React.Component {
             "<ul><li>Hover over a column header for a description of its content.</li><li>Click a row to view the corresponding rate distribution.</li></ul>"
           }
         />
-        <table
-          className="dm-table table table-hover table-smm list-group-item-text"
-          style={{ marginTop: "0.5em" }}
-        >
+        <table className="dm-table table table-hover table-smm list-group-item-text">
           <thead id="summary-model-header1">
             <tr>
               <th>Model</th>
@@ -994,30 +991,32 @@ function BUSTED(props) {
   return (
     <ResultsPage
       data={props.data}
-      hyphy_vision={props.hyphy_vision}
       scrollSpyInfo={[
         { label: "summary", href: "summary-div" },
         { label: "model statistics", href: "hyphy-model-fits" },
         { label: "tree", href: "phylogenetic-tree" }
       ]}
       methodName="Branch-site Unrestricted Statistical Test for Episodic Diversification"
+      fasta={props.fasta}
+      originalFile={props.originalFile}
+      analysisLog={props.analysisLog}
     >
       {BUSTEDContents}
     </ResultsPage>
   );
 }
 
-var render_busted = function(data, element) {
-  ReactDOM.render(<BUSTED data={data} />, document.getElementById(element));
-};
-
-var render_hv_busted = function(data, element) {
+var render_busted = function(data, element, fasta, originalFile, analysisLog) {
   ReactDOM.render(
-    <BUSTED data={data} hyphy_vision />,
+    <BUSTED
+      data={data}
+      fasta={fasta}
+      originalFile={originalFile}
+      analysisLog={analysisLog}
+    />,
     document.getElementById(element)
   );
 };
 
 module.exports = render_busted;
-module.exports.hv = render_hv_busted;
 module.exports.BUSTED = BUSTED;

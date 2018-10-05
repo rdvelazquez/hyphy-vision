@@ -12,34 +12,55 @@ import { BranchTable } from "./components/branch_table.jsx";
 import { MainResult } from "./components/mainresult.jsx";
 import { ResultsPage } from "./components/results_page.jsx";
 
-var BSRELSummary = React.createClass({
-  float_format: d3.format(".2f"),
+class BSRELSummary extends React.Component {
+  constructor(props) {
+    super(props);
 
-  countBranchesTested: function(branches_tested) {
+    this.state = {
+      branches_with_evidence: this.getBranchesWithEvidence(props.test_results),
+      test_branches: this.getTestBranches(props.test_results),
+      total_branches: this.getTotalBranches(props.test_results),
+      copy_transition: false,
+      was_evidence: this.getBranchesWithEvidence(props.test_results) > 0
+    };
+  }
+
+  componentWillReceiveProps = nextProps => {
+    this.setState({
+      branches_with_evidence: this.getBranchesWithEvidence(
+        nextProps.test_results
+      ),
+      test_branches: this.getTestBranches(nextProps.test_results),
+      total_branches: this.getTotalBranches(nextProps.test_results),
+      was_evidence: this.getBranchesWithEvidence(nextProps.test_results) > 0
+    });
+  };
+
+  countBranchesTested = branches_tested => {
     if (branches_tested) {
       return branches_tested.split(";").length;
     } else {
       return 0;
     }
-  },
+  };
 
-  getBranchesWithEvidence: function(test_results) {
+  getBranchesWithEvidence = test_results => {
     return _.filter(test_results, function(d) {
       return d.p <= 0.05;
     }).length;
-  },
+  };
 
-  getTestBranches: function(test_results) {
+  getTestBranches = test_results => {
     return _.filter(test_results, function(d) {
       return d.tested > 0;
     }).length;
-  },
+  };
 
-  getTotalBranches: function(test_results) {
+  getTotalBranches = test_results => {
     return _.keys(test_results).length;
-  },
+  };
 
-  getSummaryForClipboard() {
+  getSummaryForClipboard = () => {
     var userMessageForClipboard = "";
     if (this.state.was_evidence) {
       userMessageForClipboard =
@@ -60,9 +81,9 @@ var BSRELSummary = React.createClass({
       " branches were formally tested for diversifying selection. Significance was assessed using the Likelihood Ratio Test at a threshold of p ≤ 0.05, after correcting for multiple testing. Significance and number of rate categories inferred at each branch are provided in the detailed results table.";
 
     return summaryTextForClipboard;
-  },
+  };
 
-  getSummaryForRendering() {
+  getSummaryForRendering = () => {
     var user_message;
     if (this.state.was_evidence) {
       user_message = (
@@ -104,33 +125,9 @@ var BSRELSummary = React.createClass({
         </p>
       </div>
     );
-  },
+  };
 
-  getInitialState: function() {
-    var self = this;
-
-    return {
-      branches_with_evidence: this.getBranchesWithEvidence(
-        self.props.test_results
-      ),
-      test_branches: this.getTestBranches(self.props.test_results),
-      total_branches: this.getTotalBranches(self.props.test_results),
-      copy_transition: false
-    };
-  },
-
-  componentWillReceiveProps: function(nextProps) {
-    this.setState({
-      branches_with_evidence: this.getBranchesWithEvidence(
-        nextProps.test_results
-      ),
-      test_branches: this.getTestBranches(nextProps.test_results),
-      total_branches: this.getTotalBranches(nextProps.test_results),
-      was_evidence: this.getBranchesWithEvidence(nextProps.test_results) > 0
-    });
-  },
-
-  render: function() {
+  render() {
     return (
       <div>
         <MainResult
@@ -143,7 +140,7 @@ var BSRELSummary = React.createClass({
       </div>
     );
   }
-});
+}
 
 class BSRELContents extends React.Component {
   constructor(props) {
@@ -253,6 +250,15 @@ class BSRELContents extends React.Component {
             .css({ display: "none" })
             .html("");
         });
+
+        var treeTooltipElement = document.getElementById("tree_tooltip");
+
+        window.onmousemove = function(e) {
+          var x = e.clientX;
+          var y = e.clientY;
+          treeTooltipElement.style.top = y + 20 + "px";
+          treeTooltipElement.style.left = x + 20 + "px";
+        };
 
         createBranchGradient(data.target);
 
@@ -423,6 +429,7 @@ class BSRELContents extends React.Component {
         "Baseline MG94xREV": self.state.json.fits["Baseline MG94xREV"]
       };
     }
+
     return (
       <div>
         <BSRELSummary
@@ -430,7 +437,6 @@ class BSRELContents extends React.Component {
           pmid={self.state.pmid}
           input_data={self.state.input_data}
           json={self.state.json}
-          hyphy_vision={self.props.hyphy_vision}
         />
 
         <div id="hyphy-tree-summary" className="row">
@@ -493,7 +499,6 @@ function BSREL(props) {
   return (
     <ResultsPage
       data={props.data}
-      hyphy_vision={props.hyphy_vision}
       scrollSpyInfo={[
         { label: "summary", href: "summary-tab" },
         { label: "tree", href: "hyphy-tree-summary" },
@@ -501,23 +506,26 @@ function BSREL(props) {
         { label: "model fits", href: "hyphy-model-fits" }
       ]}
       methodName="adaptive Branch Site REL"
+      fasta={props.fasta}
+      originalFile={props.originalFile}
+      analysisLog={props.analysisLog}
     >
       {BSRELContents}
     </ResultsPage>
   );
 }
 
-function render_absrel(data, element) {
-  ReactDOM.render(<BSREL data={data} />, document.getElementById(element));
-}
-
-function render_hv_absrel(data, element) {
+function render_absrel(data, element, fasta, originalFile, analysisLog) {
   ReactDOM.render(
-    <BSREL data={data} hyphy_vision={true} />,
+    <BSREL
+      data={data}
+      fasta={fasta}
+      originalFile={originalFile}
+      analysisLog={analysisLog}
+    />,
     document.getElementById(element)
   );
 }
 
 module.exports = render_absrel;
-module.exports.hv = render_hv_absrel;
 module.exports.BSREL = BSREL;
