@@ -1,4 +1,4 @@
-require("font-awesome/css/font-awesome.css");
+require("@fortawesome/fontawesome-free/css/all.css");
 require("./application.scss");
 require("./hyphyvision.css");
 require("./fade/FADE.css");
