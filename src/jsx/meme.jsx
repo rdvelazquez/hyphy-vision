@@ -277,7 +277,6 @@ class MEMEContents extends React.Component {
           updatePValue={self.updatePValue}
           pValue={self.state.pValue}
         />
-        <Alignment fasta={this.state.fasta} width={800} height={500} />
         <MEMETable
           header={self.state.header}
           body_data={self.state.bodyData}
