@@ -2,12 +2,12 @@ var React = require("react"),
   ReactDOM = require("react-dom"),
   d3 = require("d3"),
   _ = require("underscore");
-import Alignment from "alignment.js";
 
 import { Tree } from "./components/tree.jsx";
 import { DatamonkeyTable, DatamonkeyModelTable } from "./components/tables.jsx";
 import { DatamonkeySiteGraph } from "./components/graphs.jsx";
 import { ResultsPage } from "./components/results_page.jsx";
+import { SitePlotWithAlignment } from "./components/SitePlotWithAlignment.jsx";
 
 function MEMESummary(props) {
   var number_of_sites = 0;
@@ -216,7 +216,6 @@ class MEMEContents extends React.Component {
   };
 
   toggleAlignment = () => {
-    console.log("this.state.fasta: ", this.state.fasta);
     var alignmentStateToToggleTo;
     this.state.alignmentCurrentlyShown
       ? (alignmentStateToToggleTo = false)
@@ -239,9 +238,12 @@ class MEMEContents extends React.Component {
         />
       );
       alignmentAndGraph = (
+        /*<Alignment fasta={this.state.fasta} width={800} height={500} /> */
         <div>
-          <h1>Testing</h1>
-          <Alignment fasta={this.state.fasta} width={800} height={500} />
+          <SitePlotWithAlignment
+            fasta={this.state.fasta}
+            siteData={[1, 2, 3, 4, 3, 2, 1]}
+          />
         </div>
       );
     }
