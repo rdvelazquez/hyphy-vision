@@ -2,6 +2,7 @@ var React = require("react"),
   ReactDOM = require("react-dom"),
   d3 = require("d3"),
   _ = require("underscore");
+import Alignment from "alignment.js";
 
 import { Tree } from "./components/tree.jsx";
 import { DatamonkeyTable, DatamonkeyModelTable } from "./components/tables.jsx";
@@ -47,7 +48,8 @@ function MEMESummary(props) {
               min="0"
               max="1"
               onChange={props.updatePValue}
-            />.
+            />
+            .
           </p>
           <hr />
           <p>
@@ -57,7 +59,8 @@ function MEMESummary(props) {
                 here
               </a>{" "}
               for more information about the MEME method.
-              <br />Please cite{" "}
+              <br />
+              Please cite{" "}
               <a
                 href="http://www.ncbi.nlm.nih.gov/pubmed/22807683"
                 id="summary-pmid"
@@ -164,12 +167,15 @@ class MEMEContents extends React.Component {
       header: null,
       bodyData: null,
       partitions: null,
-      pValue: 0.1
+      pValue: 0.1,
+      fasta: ">me \n ACTG \n >you \n ATTT ",
+      alignmentCurrentlyShow: false
     };
   }
 
   componentDidMount() {
     this.processData(this.props.json);
+    this.setState({ fasta: this.props.fasta });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -209,9 +215,19 @@ class MEMEContents extends React.Component {
     this.setState({ pValue: e.target.value });
   };
 
+  toggleAlignment = () => {
+    console.log("this.state.fasta: ", this.state.fasta);
+    var alignmentStateToToggleTo;
+    this.state.alignmentCurrentlyShown
+      ? (alignmentStateToToggleTo = false)
+      : (alignmentStateToToggleTo = true);
+    this.setState({ alignmentCurrentlyShown: alignmentStateToToggleTo });
+  };
+
   render() {
     var self = this;
     var site_graph;
+    var alignmentAndGraph;
     var models = {};
     if (this.state.data) {
       var columns = _.pluck(self.state.header, 0);
@@ -221,6 +237,12 @@ class MEMEContents extends React.Component {
           columns={columns}
           rows={_.flatten(_.values(self.state.bodyData), true)}
         />
+      );
+      alignmentAndGraph = (
+        <div>
+          <h1>Testing</h1>
+          <Alignment fasta={this.state.fasta} width={800} height={500} />
+        </div>
       );
     }
     if (!_.isNull(self.state.data)) {
@@ -255,6 +277,7 @@ class MEMEContents extends React.Component {
           updatePValue={self.updatePValue}
           pValue={self.state.pValue}
         />
+        <Alignment fasta={this.state.fasta} width={800} height={500} />
         <MEMETable
           header={self.state.header}
           body_data={self.state.bodyData}
@@ -264,7 +287,10 @@ class MEMEContents extends React.Component {
         <div id="plot-tab" className="row hyphy-row">
           <div className="col-md-12">
             <h4 className="dm-table-header">MEME Site Plot</h4>
-            {site_graph}
+            <button onClick={this.toggleAlignment}>Toggle Alignment</button>
+            {this.state.alignmentCurrentlyShown
+              ? alignmentAndGraph
+              : site_graph}
           </div>
         </div>
 
